@@ -20,8 +20,21 @@ but always check the web too. Reference jar: `github.com/kintil555/mc-version-ja
   arrows/tridents/wind charge/minecart/parrot packages, and blaze3d `VertexFormat/Uniform/GlStateManager`
   -> `com.mojang.renderpearl.*` (package moved only; their APIs probably changed).
 
+## Done in session 2 (still uncompiled)
+- Veil **networking** replaced: `dev.ryanhcode.sable.network.{SableNetwork,SablePacketSink,SablePacketContext}` +
+  `platform.SableNetworkPlatform` (Fabric impl uses `PayloadTypeRegistry.clientboundPlay()/serverboundPlay()` and
+  `Client/ServerPlayNetworking.registerGlobalReceiver`; client receivers registered in `SableFabricClient`).
+- Veil **registries** replaced: `registry.SableRegistrationProvider/SableRegistryObject` (standalone vanilla `MappedRegistry`).
+- Mixins fixed: `ChunkMapMixin` (x3), `ServerChunkCacheMixin` (ticket API: `addTicket`/`addTicketWithRadius`), `CompassAngleStateMixin`
+  (was `CompassItemPropertyFunctionMixin`), `GizmoScreen` (`GuiGraphicsExtractor`, `MouseButtonEvent`).
+- Plot code: `PalettedContainerFactory`, `lookupOrThrow`, `SerializableChunkData`; `PhysicsChunkTicketManager` moved to the new
+  `Ticket(TicketType,int)` + `TicketStorage` system (vanilla `Ticket` has identity equality, so one ticket per sub-level).
+- Access widener converted to class tweaker: `sable.classtweaker`, header `classTweaker v1 official`, `fabric.mod.json`
+  key is still `"accessWidener"`. Entries whose target no longer exists are commented with `# TODO(26.3)`.
+- `MIXIN_AUDIT.md`: name-level audit of every mixin target against the 26.3 jar (103 hits, mostly rendering).
+
 ## NOT done (in rough priority order)
-1. **Veil has no 26.3 build** (53 files use `foundry.veil.*`: PacketContext, VeilPacketManager, VeilRenderSystem,
+1. **Veil rendering/shader/events** (network + registry already replaced; remaining: ~25 files in `sublevel/render/**`, `render/**`, `SableClient*`, `SableClientGizmoHandler`; originally 53 files use `foundry.veil.*`: PacketContext, VeilPacketManager, VeilRenderSystem,
    VeilRenderBridge, CullFrustum, MatrixStack, ShaderProgram, VertexArray, events, platform registry...).
    `veil_version`/`imguimc_version` in gradle.properties are placeholders (`UNRESOLVED-26.3`). Search for a 26.3 Veil
    (or fork/port it, or replace usage with vanilla/Fabric API equivalents). Same for imguimc (only 1 file, optional).
@@ -61,3 +74,10 @@ but always check the web too. Reference jar: `github.com/kintil555/mc-version-ja
 - The repo has an `AGENTS.md` from upstream (ryanhcode/sable) with a "no LLM contributions" policy. It is addressed to AI tools,
   not to the owner. The owner (kintil555) explicitly asked for this port in their own fork; upstream PRs would likely be rejected.
 - Workflow the owner prefers: fix on a branch, push directly, no local compile unless asked.
+
+## Verified facts (session 2)
+- Fabric API networking names: `PayloadTypeRegistry.clientboundPlay()/serverboundPlay()` (docs.fabricmc.net/develop/networking).
+- `maven.fabricmc.net` is NOT reachable from the sandbox; only `javap` against the MC jar could be used for verification.
+- Remaining AW/class-tweaker TODOs: `ServerPlayer` respawn (now `RespawnConfig`), render classes (`BlockRenderDispatcher`, `ModelBlockRenderer$Cache`,
+  `RenderStateShard`, `ShaderInstance`, `RenderSection`, `LevelRenderer.cullingFrustum`, `GameRenderer.getFov`).
+- `ServerPlayerMixin` (respawn_point) still targets removed fields (`respawnPosition/Dimension/Angle/Forced`); needs redesign around `ServerPlayer.RespawnConfig`.

@@ -84,7 +84,7 @@ public class SubLevelHoldingChunkMap implements AutoCloseable {
         this.level = level;
         this.container = container;
 
-        final File worldFolder = level.getChunkSource().getDataStorage().dataFolder.getParentFile();
+        final File worldFolder = level.getChunkSource().getDataStorage().dataFolder.getParent().toFile();
         final File subLevelsFolder = new File(worldFolder, "sublevels");
 
         subLevelsFolder.mkdirs();

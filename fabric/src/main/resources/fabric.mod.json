@@ -11,7 +11,7 @@
     "sources": "https://github.com/ryanhcode/sable",
     "issues": "${issues}"
   },
-  "accessWidener": "sable.accesswidener",
+  "accessWidener": "sable.classtweaker",
   "license": "${license}",
   "icon": "icon.png",
   "environment": "*",

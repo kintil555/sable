@@ -5,7 +5,7 @@ plugins {
 
 loom {
     // Minecraft 26.x is unobfuscated: no mappings and no remapping are required.
-    def aw = file("src/main/resources/${mod_id}.accesswidener")
+    def aw = file("src/main/resources/${mod_id}.classtweaker")
     if (aw.exists()) {
         accessWidenerPath.set(aw)
     }

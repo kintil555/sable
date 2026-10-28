@@ -22,6 +22,7 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.TicketStorage;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -39,9 +40,9 @@ public class PhysicsChunkTicketManager {
 
     public static final double MAX_PREDICTION_DISTANCE = 20.0;
 
-    public static final TicketType<UUID> SUB_LEVEL_LOADED_TICKET_TYPE = TicketType.create(
-            "sable_sub_level_loaded",
-            UUID::compareTo
+    public static final TicketType SUB_LEVEL_LOADED_TICKET_TYPE = new TicketType(
+            TicketType.NO_TIMEOUT,
+            TicketType.FLAG_LOADING | TicketType.FLAG_SIMULATION
     );
 
     /**
@@ -81,8 +82,7 @@ public class PhysicsChunkTicketManager {
             return;
         }
 
-        final DistanceManager distanceManager = level.getChunkSource().chunkMap.getDistanceManager();
-        this.expireForcedInhabitedChunks(gameTime, distanceManager);
+        this.expireForcedInhabitedChunks(gameTime, level.getChunkSource().ticketStorage);
 
         final LongOpenHashSet unloadedChunks = new LongOpenHashSet();
 
@@ -165,7 +165,7 @@ public class PhysicsChunkTicketManager {
                     final boolean chunkLoadedEnough = isChunkLoadedEnough(level, x, z);
 
                     if (forceLoaded.contains(subLevel)) {
-                        this.inhabitChunk(level, distanceManager, uuid, gameTime, chunkLong, x, z);
+                        this.inhabitChunk(level, level.getChunkSource().ticketStorage, uuid, gameTime, chunkLong, x, z);
                     } else {
                         if (!chunkLoadedEnough || unloadedChunks.contains(chunkLong)) {
                             // The sub-level has now entered an unloaded chunk.
@@ -187,7 +187,7 @@ public class PhysicsChunkTicketManager {
 
                                 continue subLevelLoop;
                             } else {
-                                this.inhabitChunk(level, distanceManager, uuid, gameTime, chunkLong, x, z);
+                                this.inhabitChunk(level, level.getChunkSource().ticketStorage, uuid, gameTime, chunkLong, x, z);
                             }
                         }
                     }
@@ -218,7 +218,7 @@ public class PhysicsChunkTicketManager {
      * Marks a chunk as sub-level inhabited and force-loads it as a result
      */
     private void inhabitChunk(final ServerLevel level,
-                              final DistanceManager distanceManager,
+                              final TicketStorage ticketStorage,
                               final UUID subLevelId,
                               final long gameTime,
                               final long chunkLong,
@@ -230,12 +230,11 @@ public class PhysicsChunkTicketManager {
             this.forcedInhabitedChunks.put(chunkLong, set = new ObjectArraySet<>(1));
         }
 
-        final Ticket<UUID> newChunkTicket = new Ticket<>(PhysicsChunkTicketManager.SUB_LEVEL_LOADED_TICKET_TYPE, ChunkLevel.byStatus(FullChunkStatus.ENTITY_TICKING), subLevelId);
+        final Ticket newChunkTicket = new Ticket(PhysicsChunkTicketManager.SUB_LEVEL_LOADED_TICKET_TYPE, ChunkLevel.byStatus(FullChunkStatus.ENTITY_TICKING));
         final InhabitedChunkTicket newSableTicket = new InhabitedChunkTicket(subLevelId, gameTime, newChunkTicket);
 
         if (set.add(newSableTicket)) {
-            distanceManager.addTicket(chunkLong, newChunkTicket);
-            distanceManager.tickingTicketsTracker.addTicket(chunkLong, newChunkTicket);
+            ticketStorage.addTicket(chunkLong, newChunkTicket);
 
             level.getChunk(x, z, ChunkStatus.FULL, true);
         } else {
@@ -279,7 +278,7 @@ public class PhysicsChunkTicketManager {
         }
     }
 
-    private void expireForcedInhabitedChunks(final long gameTime, final DistanceManager distanceManager) {
+    private void expireForcedInhabitedChunks(final long gameTime, final TicketStorage ticketStorage) {
         final ObjectIterator<Long2ObjectMap.Entry<ObjectArraySet<InhabitedChunkTicket>>> forcedChunkIter = this.forcedInhabitedChunks.long2ObjectEntrySet().iterator();
 
         while (forcedChunkIter.hasNext()) {
@@ -295,10 +294,9 @@ public class PhysicsChunkTicketManager {
                 final boolean outdated = ticket.lastInhabitedTick() < gameTime - 20;
 
                 if (outdated) {
-                    final Ticket<UUID> chunkTicket = ticket.getTicket();
+                    final Ticket chunkTicket = ticket.getTicket();
 
-                    distanceManager.removeTicket(chunkLong, chunkTicket);
-                    distanceManager.tickingTicketsTracker.removeTicket(chunkLong, chunkTicket);
+                    ticketStorage.removeTicket(chunkLong, chunkTicket);
                     setIter.remove();
                 }
             }
