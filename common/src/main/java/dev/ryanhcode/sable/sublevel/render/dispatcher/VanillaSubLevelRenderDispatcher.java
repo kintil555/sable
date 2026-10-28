@@ -1,7 +1,7 @@
 package dev.ryanhcode.sable.sublevel.render.dispatcher;
 
 import com.mojang.blaze3d.shaders.FogShape;
-import com.mojang.blaze3d.shaders.Uniform;
+import com.mojang.renderpearl.backend.opengl.Uniform;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import dev.ryanhcode.sable.companion.math.BoundingBox3ic;
@@ -21,7 +21,7 @@ import foundry.veil.api.client.render.profiler.RenderProfilerCounter;
 import foundry.veil.api.client.render.profiler.VeilRenderProfiler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.PrioritizeChunkUpdates;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.renderer.chunk.RenderRegionCache;

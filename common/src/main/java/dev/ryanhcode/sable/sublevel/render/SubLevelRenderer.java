@@ -6,7 +6,6 @@ import dev.ryanhcode.sable.sublevel.ClientSubLevel;
 import dev.ryanhcode.sable.sublevel.render.dispatcher.ReachAroundSubLevelRenderDispatcher;
 import dev.ryanhcode.sable.sublevel.render.dispatcher.SubLevelRenderDispatcher;
 import dev.ryanhcode.sable.sublevel.render.dispatcher.VanillaSubLevelRenderDispatcher;
-import foundry.veil.api.compat.SodiumCompat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 
@@ -78,7 +77,7 @@ public final class SubLevelRenderer {
         VANILLA {
             @Override
             public boolean isSupported() {
-                return !SodiumCompat.isLoaded();
+                return true;
             }
 
             @Override
@@ -89,7 +88,7 @@ public final class SubLevelRenderer {
         SODIUM_REACHAROUND {
             @Override
             public boolean isSupported() {
-                return SodiumCompat.isLoaded();
+                return false; // Sodium support dropped in the 26.3 port
             }
 
             @Override

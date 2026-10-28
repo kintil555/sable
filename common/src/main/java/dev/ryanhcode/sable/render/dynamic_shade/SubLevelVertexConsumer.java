@@ -2,7 +2,7 @@ package dev.ryanhcode.sable.render.dynamic_shade;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 
 /**
  * Make all shade-less things have a normal pointing straight up for dynamic shading!

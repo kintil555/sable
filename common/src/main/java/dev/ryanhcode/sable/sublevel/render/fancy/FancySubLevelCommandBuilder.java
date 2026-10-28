@@ -1,11 +1,11 @@
 package dev.ryanhcode.sable.sublevel.render.fancy;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.renderpearl.backend.opengl.GlStateManager;
 import dev.ryanhcode.sable.sublevel.render.staging.StagingBuffer;
 import foundry.veil.api.client.render.CullFrustum;
 import foundry.veil.api.client.render.VeilRenderBridge;
 import foundry.veil.api.client.render.VeilRenderSystem;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import org.joml.Vector3dc;

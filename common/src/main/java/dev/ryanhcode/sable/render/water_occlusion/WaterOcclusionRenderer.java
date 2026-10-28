@@ -2,7 +2,7 @@ package dev.ryanhcode.sable.render.water_occlusion;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.platform.Window;
-import com.mojang.blaze3d.shaders.Uniform;
+import com.mojang.renderpearl.backend.opengl.Uniform;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.ryanhcode.sable.render.region.SimpleCulledRenderRegion;
 import dev.ryanhcode.sable.sublevel.water_occlusion.WaterOcclusionContainer;

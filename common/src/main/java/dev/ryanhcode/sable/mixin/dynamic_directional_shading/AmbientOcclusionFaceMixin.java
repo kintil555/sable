@@ -6,7 +6,7 @@ import dev.ryanhcode.sable.mixinterface.dynamic_directional_shading.ModelBlockRe
 import dev.ryanhcode.sable.render.dynamic_shade.SableDynamicDirectionalShading;
 import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 

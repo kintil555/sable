@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import dev.ryanhcode.sable.annotation.MixinModVersionConstraint;
 import dev.ryanhcode.sable.platform.SableLoaderPlatform;
 import foundry.veil.Veil;
-import foundry.veil.api.compat.SodiumCompat;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -28,13 +27,11 @@ import java.util.Set;
 public abstract class AbstractSableMixinPlugin implements IMixinConfigPlugin {
     public static final Logger LOGGER = LogUtils.getLogger();
     private final Object2BooleanMap<String> modLoadedCache = new Object2BooleanOpenHashMap<>();
-    private boolean sodiumPresent;
 
     @Override
     public void onLoad(final String mixinPackage) {
-        this.sodiumPresent = SodiumCompat.isLoaded();
-
-        LOGGER.info("Using {} renderer mixins", this.sodiumPresent ? "Sodium" : "Vanilla");
+        // Sodium compatibility mixins were dropped in the 26.3 port, only the vanilla renderer mixins are used.
+        LOGGER.info("Using Vanilla renderer mixins");
     }
 
     @Override
@@ -46,11 +43,10 @@ public abstract class AbstractSableMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(final String targetClassName, final String mixinClassName) {
         // TODO: Housekeeping
         if (mixinClassName.startsWith("dev.ryanhcode.sable.mixin.sublevel_render.impl")) {
-            return this.sodiumPresent ? mixinClassName.startsWith("dev.ryanhcode.sable.mixin.sublevel_render.impl.sodium") : mixinClassName.startsWith("dev.ryanhcode.sable.mixin.sublevel_render.impl.vanilla");
+            return mixinClassName.startsWith("dev.ryanhcode.sable.mixin.sublevel_render.impl.vanilla");
         }
 
         if (mixinClassName.startsWith("dev.ryanhcode.sable.mixin.compatibility.") ||
-                mixinClassName.startsWith("dev.ryanhcode.sable.neoforge.mixin.compatibility.") ||
                 mixinClassName.startsWith("dev.ryanhcode.sable.fabric.mixin.compatibility.")
         ) {
             final String[] parts = mixinClassName.split("\\.");

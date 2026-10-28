@@ -1,6 +1,6 @@
 package dev.ryanhcode.sable.sublevel.render.staging;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.renderpearl.backend.opengl.GlStateManager;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;

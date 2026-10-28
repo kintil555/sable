@@ -58,13 +58,13 @@ tasks.named('sourcesJar', Jar) {
 }
 
 publishMods {
-    def isFabric = project.name == "fabric"
-    def loaderName = isFabric ? "Fabric" : "NeoForge"
+    def isFabric = true
+    def loaderName = "Fabric"
     def changelogFile = rootProject.file("changelog.md")
 
     type = STABLE
 
-    file = isFabric ? project.tasks.remapJar.archiveFile : jar.archiveFile
+    file = project.tasks.jar.archiveFile
     changelog = changelogFile.text
 
     version = "$project.version+mc$minecraft_version"
@@ -80,14 +80,8 @@ publishMods {
         clientRequired = true
         serverRequired = true
 
-        if (project.name.contains("neoforge")) {
-            optional("create")
-        }
-
-        if (isFabric) {
-            requires("fabric-api")
-            embeds("forge-config-api-port")
-        }
+        requires("fabric-api")
+        embeds("forge-config-api-port")
 
         embeds("veil-lib")
         optional "imguimc"
@@ -98,14 +92,8 @@ publishMods {
         projectId = "T9PomCSv"
         minecraftVersions.add(minecraft_version)
 
-        if (project.name.contains("neoforge")) {
-            optional("create")
-        }
-
-        if (isFabric) {
-            requires("fabric-api")
-            embeds("forge-config-api-port")
-        }
+        requires("fabric-api")
+        embeds("forge-config-api-port")
 
         embeds("veil")
         optional "imguimc"
@@ -123,22 +111,4 @@ publishMods {
         allowEmptyFiles = true
     }
 
-    // We only want to send one message
-    if (!isFabric) {
-        discord {
-            webhookUrl = providers.environmentVariable("DISCORD_WEBHOOK")
-
-            avatarUrl = "https://cdn.modrinth.com/data/T9PomCSv/8c0a8c64c9a5a8d446d0aa23d244cb9b52314a1d.png"
-            username = "Sable Updates"
-
-            def modrinthLink = "https://modrinth.com/mod/sable"
-            def curseForgeLink = "<https://www.curseforge.com/minecraft/mc-mods/sable>"
-
-            setPlatforms(publishMods.platforms.modrinth)
-
-            content = changelog.map {
-                "# Sable release $project.version \n$it\nModrinth: $modrinthLink\nCurseForge: $curseForgeLink"
-            }
-        }
-    }
 }
