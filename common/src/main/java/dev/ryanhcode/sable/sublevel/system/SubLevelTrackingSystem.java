@@ -1,5 +1,8 @@
 package dev.ryanhcode.sable.sublevel.system;
 
+import dev.ryanhcode.sable.network.SablePacketSink;
+import dev.ryanhcode.sable.network.SableNetwork;
+
 import dev.ryanhcode.sable.SableConfig;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelObserver;
@@ -16,7 +19,7 @@ import dev.ryanhcode.sable.sublevel.plot.LevelPlot;
 import dev.ryanhcode.sable.sublevel.plot.PlotChunkHolder;
 import dev.ryanhcode.sable.sublevel.plot.SubLevelPlayerChunkSender;
 import dev.ryanhcode.sable.sublevel.storage.SubLevelRemovalReason;
-import foundry.veil.api.network.VeilPacketManager;
+
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
@@ -77,7 +80,7 @@ public class SubLevelTrackingSystem implements SubLevelObserver {
         this.sendRemoval(this.serverWidePlayerSink(serverSubLevel), serverSubLevel);
     }
 
-    public VeilPacketManager.PacketSink serverWidePlayerSink(final ServerSubLevel serverSubLevel) {
+    public SablePacketSink serverWidePlayerSink(final ServerSubLevel serverSubLevel) {
         return packet -> {
             for (final UUID uuid : serverSubLevel.getTrackingPlayers()) {
                 final ServerPlayer player = this.level.getServer().getPlayerList().getPlayer(uuid);
@@ -126,7 +129,7 @@ public class SubLevelTrackingSystem implements SubLevelObserver {
         }
     }
 
-    private void sendRemoval(final VeilPacketManager.PacketSink sink, final ServerSubLevel subLevel) {
+    private void sendRemoval(final SablePacketSink sink, final ServerSubLevel subLevel) {
         final SubLevelContainer container = SubLevelContainer.getContainer(this.level);
         assert container != null;
 
@@ -197,7 +200,7 @@ public class SubLevelTrackingSystem implements SubLevelObserver {
 
                     if (serverWidePlayer != null) {
                         // they are still online, just not in this world
-                        this.sendRemoval(VeilPacketManager.player(serverWidePlayer), serverSubLevel);
+                        this.sendRemoval(SableNetwork.player(serverWidePlayer), serverSubLevel);
                     }
 
                     iter.remove();
@@ -205,7 +208,7 @@ public class SubLevelTrackingSystem implements SubLevelObserver {
                 }
 
                 if (!this.shouldLoad(player, entityPos)) {
-                    this.sendRemoval(VeilPacketManager.player(player), serverSubLevel);
+                    this.sendRemoval(SableNetwork.player(player), serverSubLevel);
                     iter.remove();
                 }
             }

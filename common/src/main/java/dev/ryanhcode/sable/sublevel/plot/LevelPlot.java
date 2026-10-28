@@ -171,9 +171,9 @@ public abstract class LevelPlot {
         final LevelChunkSection[] sections = new LevelChunkSection[sectionCount];
 
         for (int i = 0; i < sectionCount; ++i) {
-            final Registry<Biome> biomeRegistry = level.registryAccess().registryOrThrow(Registries.BIOME);
-            final PalettedContainer<BlockState> states = new PalettedContainer(Block.BLOCK_STATE_REGISTRY, Blocks.AIR.defaultBlockState(), PalettedContainer.Strategy.SECTION_STATES);
-            final PalettedContainer<Holder<Biome>> biomes = new PalettedContainer(biomeRegistry.asHolderIdMap(), biomeRegistry.getHolderOrThrow(this.biome), PalettedContainer.Strategy.SECTION_BIOMES);
+            final Registry<Biome> biomeRegistry = level.registryAccess().lookupOrThrow(Registries.BIOME);
+            final PalettedContainer<BlockState> states = level.palettedContainerFactory().createForBlockStates();
+            final PalettedContainer<Holder<Biome>> biomes = new PalettedContainer<>(biomeRegistry.getOrThrow(this.biome), level.palettedContainerFactory().biomeStrategy());
 
             sections[i] = new LevelChunkSection(states, biomes);
         }

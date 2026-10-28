@@ -1,5 +1,7 @@
 package dev.ryanhcode.sable;
 
+import dev.ryanhcode.sable.network.SablePacketSink;
+
 import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.network.packets.tcp.ClientboundFloatingBlockMaterialPacket;
@@ -15,7 +17,7 @@ import dev.ryanhcode.sable.sublevel.plot.LevelPlot;
 import dev.ryanhcode.sable.sublevel.plot.PlotChunkHolder;
 import dev.ryanhcode.sable.sublevel.plot.heat.SubLevelHeatMapManager;
 import dev.ryanhcode.sable.sublevel.water_occlusion.WaterOcclusionContainer;
-import foundry.veil.api.network.VeilPacketManager;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -92,7 +94,7 @@ public class SableCommonEvents {
         container.physicsSystem().handleBlockChange(sectionPos, section, localX, y & 15, localZ, oldState, newState);
     }
 
-    public static void syncDataPacket(final VeilPacketManager.PacketSink sink) {
+    public static void syncDataPacket(final SablePacketSink sink) {
         sink.sendPacket(PhysicsBlockPropertiesDefinitionLoader.INSTANCE.getDefinitions().stream().map(ClientboundPhysicsPropertyPacket::new).toArray(CustomPacketPayload[]::new));
         sink.sendPacket(DimensionPhysicsData.compilePacket());
         sink.sendPacket(FloatingBlockMaterialDataHandler.allMaterials.entrySet().stream().map(e -> new ClientboundFloatingBlockMaterialPacket(e.getKey(), e.getValue())).toArray(CustomPacketPayload[]::new));

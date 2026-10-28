@@ -26,6 +26,7 @@ public final class SableFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         SableClient.init();
+        dev.ryanhcode.sable.fabric.platform.SableNetworkPlatformImpl.registerClientReceivers();
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> FloatingBlockMaterialDataHandler.clearMaterials());
         ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new IdentifiableResourceReloadListener() {

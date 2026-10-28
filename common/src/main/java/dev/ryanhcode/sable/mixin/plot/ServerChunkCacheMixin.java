@@ -7,7 +7,6 @@ import dev.ryanhcode.sable.sublevel.plot.PlotChunkHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.*;
-import net.minecraft.server.level.progress.ChunkProgressListener;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.chunk.*;
@@ -44,9 +43,8 @@ public class ServerChunkCacheMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     public void init(final ServerLevel serverLevel, final LevelStorageSource.LevelStorageAccess levelStorageAccess, final DataFixer dataFixer, final StructureTemplateManager structureTemplateManager,
-                     final Executor executor, final ChunkGenerator chunkGenerator, final int i, final int j, final boolean bl, final ChunkProgressListener chunkProgressListener,
-                     final ChunkStatusUpdateListener chunkStatusUpdateListener, final Supplier supplier, final CallbackInfo ci) {
-        this.sable$emptyChunk = new EmptyLevelChunk(serverLevel, new ChunkPos(0, 0), serverLevel.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS));
+                     final Executor executor, final ChunkGenerator chunkGenerator, final int i, final int j, final boolean bl, final ChunkStatusUpdateListener chunkStatusUpdateListener, final CallbackInfo ci) {
+        this.sable$emptyChunk = new EmptyLevelChunk(serverLevel, new ChunkPos(0, 0), serverLevel.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS));
     }
 
     @Unique
@@ -163,8 +161,16 @@ public class ServerChunkCacheMixin {
         }
     }
 
-    @Inject(method = "addRegionTicket", at = @At("HEAD"), cancellable = true)
-    private <T> void addRegionTicket(final TicketType<T> type, final ChunkPos pos, final int distance, final T value, final CallbackInfo ci) {
+    @Inject(method = "addTicket", at = @At("HEAD"), cancellable = true)
+    private void addTicket(final Ticket ticket, final ChunkPos pos, final CallbackInfo ci) {
+        final SubLevelContainer container = this.sable$getPlotContainer();
+        if (container.inBounds(pos)) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method = "addTicketWithRadius", at = @At("HEAD"), cancellable = true)
+    private void addTicketWithRadius(final TicketType type, final ChunkPos pos, final int radius, final CallbackInfo ci) {
         final SubLevelContainer container = this.sable$getPlotContainer();
         if (container.inBounds(pos)) {
             ci.cancel();

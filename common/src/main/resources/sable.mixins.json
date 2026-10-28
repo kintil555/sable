@@ -6,7 +6,7 @@
   "plugin": "dev.ryanhcode.sable.plugin.SableMixinPlugin",
   "client": [
     "block_decal_render.LevelRendererMixin",
-    "camera.camera_rotation.CompassItemPropertyFunctionMixin",
+    "camera.camera_rotation.CompassAngleStateMixin",
     "camera.camera_rotation.EntityMixin",
     "camera.camera_rotation.GuiMixin",
     "camera.camera_zoom.CameraMixin",

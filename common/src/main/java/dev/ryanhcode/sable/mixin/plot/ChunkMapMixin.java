@@ -43,7 +43,7 @@ public class ChunkMapMixin {
     }
 
     @Inject(method = "saveChunkIfNeeded", at = @At("HEAD"), cancellable = true)
-    private void sable$saveChunkIfNeeded(final ChunkHolder chunkHolder, final CallbackInfoReturnable<Boolean> cir) {
+    private void sable$saveChunkIfNeeded(final ChunkHolder chunkHolder, final long gameTime, final CallbackInfoReturnable<Boolean> cir) {
         if (chunkHolder instanceof PlotChunkHolder) {
             cir.setReturnValue(false);
         }

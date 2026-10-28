@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import dev.ryanhcode.sable.sublevel.plot.PlotChunkHolder;
 import net.minecraft.server.level.ChunkMap;
+import net.minecraft.server.level.DistanceManager;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import org.spongepowered.asm.mixin.Final;
@@ -17,8 +18,8 @@ public class ChunkMapMixin {
 
     @Shadow @Final private ServerLevel level;
 
-    @WrapOperation(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ChunkMap$DistanceManager;inEntityTickingRange(J)Z"))
-    private boolean sable$wrapEntityTickingRange(final ChunkMap.DistanceManager instance, final long l, final Operation<Boolean> original) {
+    @WrapOperation(method = "*", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/DistanceManager;inEntityTickingRange(J)Z"))
+    private boolean sable$wrapEntityTickingRange(final DistanceManager instance, final long l, final Operation<Boolean> original) {
         final ChunkPos chunkPos = new ChunkPos(l);
         final SubLevelContainer container = SubLevelContainer.getContainer(this.level);
 

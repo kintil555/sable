@@ -4,37 +4,35 @@ import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.network.packets.ClientboundSableSnapshotDualPacket;
 import dev.ryanhcode.sable.network.packets.ClientboundSableSnapshotInfoDualPacket;
 import dev.ryanhcode.sable.network.packets.tcp.*;
-import foundry.veil.api.network.VeilPacketManager;
+import dev.ryanhcode.sable.platform.SableNetworkPlatform;
 
 public class SableTCPPackets {
 
-    private static final VeilPacketManager PACKET_MANAGER = VeilPacketManager.create(Sable.MOD_ID, "1");
-
     public static void init() {
-        PACKET_MANAGER.registerClientbound(ClientboundSableSnapshotDualPacket.TYPE, ClientboundSableSnapshotDualPacket.CODEC, ClientboundSableSnapshotDualPacket::handle);
-        PACKET_MANAGER.registerClientbound(ClientboundSableSnapshotInfoDualPacket.TYPE, ClientboundSableSnapshotInfoDualPacket.CODEC, ClientboundSableSnapshotInfoDualPacket::handle);
-        PACKET_MANAGER.registerClientbound(ClientboundStopMovingSubLevelPacket.TYPE, ClientboundStopMovingSubLevelPacket.CODEC, ClientboundStopMovingSubLevelPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundSableSnapshotDualPacket.TYPE, ClientboundSableSnapshotDualPacket.CODEC, ClientboundSableSnapshotDualPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundSableSnapshotInfoDualPacket.TYPE, ClientboundSableSnapshotInfoDualPacket.CODEC, ClientboundSableSnapshotInfoDualPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundStopMovingSubLevelPacket.TYPE, ClientboundStopMovingSubLevelPacket.CODEC, ClientboundStopMovingSubLevelPacket::handle);
 
-        PACKET_MANAGER.registerClientbound(ClientboundChangeSubLevelNamePacket.TYPE, ClientboundChangeSubLevelNamePacket.CODEC, ClientboundChangeSubLevelNamePacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundChangeSubLevelNamePacket.TYPE, ClientboundChangeSubLevelNamePacket.CODEC, ClientboundChangeSubLevelNamePacket::handle);
 
-        PACKET_MANAGER.registerClientbound(ClientboundStartTrackingSubLevelPacket.TYPE, ClientboundStartTrackingSubLevelPacket.CODEC, ClientboundStartTrackingSubLevelPacket::handle);
-        PACKET_MANAGER.registerClientbound(ClientboundFinalizeSubLevelPacket.TYPE, ClientboundFinalizeSubLevelPacket.CODEC, ClientboundFinalizeSubLevelPacket::handle);
-        PACKET_MANAGER.registerClientbound(ClientboundStopTrackingSubLevelPacket.TYPE, ClientboundStopTrackingSubLevelPacket.CODEC, ClientboundStopTrackingSubLevelPacket::handle);
-        PACKET_MANAGER.registerClientbound(ClientboundChangeBoundsSubLevelPacket.TYPE, ClientboundChangeBoundsSubLevelPacket.CODEC, ClientboundChangeBoundsSubLevelPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundStartTrackingSubLevelPacket.TYPE, ClientboundStartTrackingSubLevelPacket.CODEC, ClientboundStartTrackingSubLevelPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundFinalizeSubLevelPacket.TYPE, ClientboundFinalizeSubLevelPacket.CODEC, ClientboundFinalizeSubLevelPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundStopTrackingSubLevelPacket.TYPE, ClientboundStopTrackingSubLevelPacket.CODEC, ClientboundStopTrackingSubLevelPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundChangeBoundsSubLevelPacket.TYPE, ClientboundChangeBoundsSubLevelPacket.CODEC, ClientboundChangeBoundsSubLevelPacket::handle);
 
-        PACKET_MANAGER.registerClientbound(ClientboundFreezePlayerPacket.TYPE, ClientboundFreezePlayerPacket.CODEC, ClientboundFreezePlayerPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundFreezePlayerPacket.TYPE, ClientboundFreezePlayerPacket.CODEC, ClientboundFreezePlayerPacket::handle);
 
-        PACKET_MANAGER.registerClientbound(ClientboundPhysicsPropertyPacket.TYPE, ClientboundPhysicsPropertyPacket.CODEC, ClientboundPhysicsPropertyPacket::handle);
-        PACKET_MANAGER.registerClientbound(ClientboundFloatingBlockMaterialPacket.TYPE, ClientboundFloatingBlockMaterialPacket.CODEC, ClientboundFloatingBlockMaterialPacket::handle);
-        PACKET_MANAGER.registerClientbound(ClientboundDimensionPhysicsPacket.TYPE, ClientboundDimensionPhysicsPacket.CODEC, ClientboundDimensionPhysicsPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundPhysicsPropertyPacket.TYPE, ClientboundPhysicsPropertyPacket.CODEC, ClientboundPhysicsPropertyPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundFloatingBlockMaterialPacket.TYPE, ClientboundFloatingBlockMaterialPacket.CODEC, ClientboundFloatingBlockMaterialPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundDimensionPhysicsPacket.TYPE, ClientboundDimensionPhysicsPacket.CODEC, ClientboundDimensionPhysicsPacket::handle);
 
-        PACKET_MANAGER.registerClientbound(ClientboundRecentlySplitSubLevelPacket.TYPE, ClientboundRecentlySplitSubLevelPacket.CODEC, ClientboundRecentlySplitSubLevelPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundRecentlySplitSubLevelPacket.TYPE, ClientboundRecentlySplitSubLevelPacket.CODEC, ClientboundRecentlySplitSubLevelPacket::handle);
 
-        PACKET_MANAGER.registerClientbound(ClientboundSableUDPActivationPacket.TYPE, ClientboundSableUDPActivationPacket.CODEC, ClientboundSableUDPActivationPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundSableUDPActivationPacket.TYPE, ClientboundSableUDPActivationPacket.CODEC, ClientboundSableUDPActivationPacket::handle);
 
-        PACKET_MANAGER.registerClientbound(ClientboundEnterGizmoPacket.TYPE, ClientboundEnterGizmoPacket.CODEC, ClientboundEnterGizmoPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerClientbound(ClientboundEnterGizmoPacket.TYPE, ClientboundEnterGizmoPacket.CODEC, ClientboundEnterGizmoPacket::handle);
 
-        PACKET_MANAGER.registerServerbound(ServerboundPunchSubLevelPacket.TYPE, ServerboundPunchSubLevelPacket.CODEC, ServerboundPunchSubLevelPacket::handle);
-        PACKET_MANAGER.registerServerbound(ServerboundGizmoMoveSubLevelPacket.TYPE, ServerboundGizmoMoveSubLevelPacket.CODEC, ServerboundGizmoMoveSubLevelPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerServerbound(ServerboundPunchSubLevelPacket.TYPE, ServerboundPunchSubLevelPacket.CODEC, ServerboundPunchSubLevelPacket::handle);
+        SableNetworkPlatform.INSTANCE.registerServerbound(ServerboundGizmoMoveSubLevelPacket.TYPE, ServerboundGizmoMoveSubLevelPacket.CODEC, ServerboundGizmoMoveSubLevelPacket::handle);
     }
 }

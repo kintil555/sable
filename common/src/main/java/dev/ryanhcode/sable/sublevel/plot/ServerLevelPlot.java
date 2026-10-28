@@ -42,7 +42,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.*;
-import net.minecraft.world.level.chunk.storage.ChunkSerializer;
+import net.minecraft.world.level.chunk.storage.SerializableChunkData;
 import net.minecraft.world.level.entity.EntitySection;
 import net.minecraft.world.level.entity.PersistentEntitySectionManager;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -59,9 +59,9 @@ import java.util.stream.Stream;
  */
 public class ServerLevelPlot extends LevelPlot {
     protected static final int DATA_VERSION = 1;
-    private static final Codec<PalettedContainer<BlockState>> BLOCK_STATE_CODEC = PalettedContainer.codecRW(
-            Block.BLOCK_STATE_REGISTRY, BlockState.CODEC, PalettedContainer.Strategy.SECTION_STATES, Blocks.AIR.defaultBlockState()
-    );
+    private static Codec<PalettedContainer<BlockState>> blockStateCodec(final net.minecraft.world.level.Level level) {
+        return level.palettedContainerFactory().blockStatesContainerCodec();
+    }
 
     /**
      * The light engine for this plot
@@ -322,7 +322,7 @@ public class ServerLevelPlot extends LevelPlot {
         final LevelChunkSection[] sections = new LevelChunkSection[sectionCount];
 
         for (int i = 0; i < sectionCount; ++i) {
-            sections[i] = new LevelChunkSection(level.registryAccess().registryOrThrow(Registries.BIOME));
+            sections[i] = new LevelChunkSection(level.palettedContainerFactory());
         }
 
         final LevelChunk chunk = new LevelChunk(level, pos, UpgradeData.EMPTY, new LevelChunkTicks<>(), new LevelChunkTicks<>(), 0L, sections, null, null);
@@ -359,7 +359,7 @@ public class ServerLevelPlot extends LevelPlot {
                 }
 
                 final CompoundTag sectionTag = new CompoundTag();
-                sectionTag.put("block_states", BLOCK_STATE_CODEC.encodeStart(NbtOps.INSTANCE, section.getStates()).getOrThrow());
+                sectionTag.put("block_states", blockStateCodec(level).encodeStart(NbtOps.INSTANCE, section.getStates()).getOrThrow());
 
                 final SectionPos sectionPos = SectionPos.of(global, level.getSectionYFromSectionIndex(idx));
                 final DataLayer blockLight = this.lightEngine.getLayerListener(LightLayer.BLOCK).getDataLayerData(sectionPos);
@@ -466,12 +466,12 @@ public class ServerLevelPlot extends LevelPlot {
                 final PalettedContainer<BlockState> palettedContainer;
                 final CompoundTag sectionTag = sectionsTag.getCompound(sectionKey);
 
-                palettedContainer = BLOCK_STATE_CODEC.parse(NbtOps.INSTANCE, sectionTag.getCompound("block_states"))
+                palettedContainer = blockStateCodec(level).parse(NbtOps.INSTANCE, sectionTag.getCompound("block_states"))
                         .promotePartial(string -> logLoadingErrors(new ChunkPos(chunkPos), chunk.getSectionYFromSectionIndex(yIndex), string))
-                        .getOrThrow(ChunkSerializer.ChunkReadException::new);
+                        .getOrThrow(SerializableChunkData.ChunkReadException::new);
 
-                final Registry<Biome> biomeRegistry = level.registryAccess().registryOrThrow(Registries.BIOME);
-                final PalettedContainer<Holder<Biome>> biomeContainer = new PalettedContainer<>(biomeRegistry.asHolderIdMap(), biomeRegistry.getHolderOrThrow(this.biome), PalettedContainer.Strategy.SECTION_BIOMES);
+                final Registry<Biome> biomeRegistry = level.registryAccess().lookupOrThrow(Registries.BIOME);
+                final PalettedContainer<Holder<Biome>> biomeContainer = new PalettedContainer<>(biomeRegistry.getOrThrow(this.biome), level.palettedContainerFactory().biomeStrategy());
 
                 sections[yIndex] = new LevelChunkSection(palettedContainer, biomeContainer);
 

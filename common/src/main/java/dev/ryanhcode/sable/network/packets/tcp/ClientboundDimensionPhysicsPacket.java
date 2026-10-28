@@ -4,7 +4,7 @@ import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.network.tcp.SableTCPPacket;
 import dev.ryanhcode.sable.physics.config.dimension_physics.DimensionPhysics;
 import dev.ryanhcode.sable.physics.config.dimension_physics.DimensionPhysicsData;
-import foundry.veil.api.network.handler.PacketContext;
+import dev.ryanhcode.sable.network.SablePacketContext;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.Registries;
@@ -30,7 +30,7 @@ public record ClientboundDimensionPhysicsPacket(List<DimensionPhysics> dimension
 
 
     @Override
-    public void handle(final PacketContext context) {
+    public void handle(final SablePacketContext context) {
         Minecraft.getInstance().execute(() -> {
             DimensionPhysicsData.clearPhysics();
             for (final DimensionPhysics dimensionPhysic : this.dimensionPhysics) {
