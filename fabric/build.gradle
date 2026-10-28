@@ -15,9 +15,6 @@ dependencies {
 
     include(implementation("org.apache.maven:maven-artifact:3.8.5"))
 
-    // TODO(26.3): no Veil release exists for 26.3 yet, see PORTING.md
-    include(implementation("foundry.veil:veil-fabric-${project.minecraft_version}:${project.veil_version}"))
-    compileOnly("foundry.imguimc:imguimc-fabric-${project.minecraft_version}:${project.imguimc_version}")
 
     // Physics pipeline (Rapier natives), nested into the final jar
     include(implementation(project(":sable_rapier")))

@@ -54,9 +54,6 @@ dependencies {
 
     // sable-companion is vendored into this repository (dev.ryanhcode.sable.companion), there is no 26.3 release of it.
 
-    // TODO(26.3): no Veil release exists for 26.3 yet, see PORTING.md
-    implementation("foundry.veil:veil-fabric-${project.minecraft_version}:${project.veil_version}")
-    compileOnly("foundry.imguimc:imguimc-fabric-${project.minecraft_version}:${project.imguimc_version}")
 
     //source: https://github.com/Fuzss/forgeconfigapiport-fabric
     implementation "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forgeconfigapiport_version}"

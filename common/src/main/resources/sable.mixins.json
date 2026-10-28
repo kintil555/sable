@@ -19,7 +19,6 @@
     "command.ClientSuggestionProviderMixin",
     "compatibility.shouldersurfing.ObjectPickerMixin",
     "conduit.ConduitRendererMixin",
-    "config.GameRendererAccessor",
     "debug_render.DebugRendererMixin",
     "debug_render.DebugScreenOverlayMixin",
     "debug_render.LevelRendererMixin",

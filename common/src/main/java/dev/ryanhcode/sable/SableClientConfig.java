@@ -1,7 +1,6 @@
 package dev.ryanhcode.sable;
 
 import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
-import dev.ryanhcode.sable.mixin.config.GameRendererAccessor;
 import dev.ryanhcode.sable.mixinterface.plot.SubLevelContainerHolder;
 import dev.ryanhcode.sable.render.dynamic_shade.SableDynamicDirectionalShading;
 import dev.ryanhcode.sable.render.sky_light_shadow.SableSkyLightShadows;
@@ -9,8 +8,7 @@ import dev.ryanhcode.sable.render.water_occlusion.WaterOcclusionRenderer;
 import dev.ryanhcode.sable.sublevel.ClientSubLevel;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.sublevel.render.SubLevelRenderer;
-import foundry.veil.Veil;
-import foundry.veil.api.client.render.VeilRenderSystem;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.neoforged.neoforge.common.ModConfigSpec;
@@ -46,7 +44,7 @@ public final class SableClientConfig {
                 .define("sub_level_skylight_shadows", false);
         DEBUG_DRAW_LOADED_CHUNKS = builder
                 .comment("Whether to draw loaded chunks on the client in the chunk debug renderer")
-                .define("debug_draw_loaded_chunks", Veil.platform().isDevelopmentEnvironment());
+                .define("debug_draw_loaded_chunks", FabricLoader.getInstance().isDevelopmentEnvironment());
         INTERPOLATION_DELAY = builder
                 .comment("The distance back in game-ticks that the snapshot interpolation should operate")
                 .defineInRange("sub_level_snapshot_interpolation_delay_ticks", 1.5, 0.0, 100.0);
@@ -90,12 +88,12 @@ public final class SableClientConfig {
 
         if (notify) {
             if (reloadShaders) {
-                VeilRenderSystem.renderer().getVanillaShaderCompiler().reload(((GameRendererAccessor) Minecraft.getInstance().gameRenderer).getShaders().values());
+                Minecraft.getInstance().execute(() -> Minecraft.getInstance().reloadResourcePacks());
             }
 
             if (reloadChunks) {
                 Minecraft.getInstance().execute(() -> {
-                    VeilRenderSystem.rebuildChunks();
+                    Minecraft.getInstance().levelRenderer.resetLevelRenderData();
                     final ClientLevel level = Minecraft.getInstance().level;
                     if (level != null) {
                         final SubLevelContainer plotContainer = ((SubLevelContainerHolder) level).sable$getPlotContainer();

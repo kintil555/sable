@@ -81,3 +81,17 @@ but always check the web too. Reference jar: `github.com/kintil555/mc-version-ja
 - Remaining AW/class-tweaker TODOs: `ServerPlayer` respawn (now `RespawnConfig`), render classes (`BlockRenderDispatcher`, `ModelBlockRenderer$Cache`,
   `RenderStateShard`, `ShaderInstance`, `RenderSection`, `LevelRenderer.cullingFrustum`, `GameRenderer.getFov`).
 - `ServerPlayerMixin` (respawn_point) still targets removed fields (`respawnPosition/Dimension/Angle/Forced`); needs redesign around `ServerPlayer.RespawnConfig`.
+
+## Session 3 (still uncompiled)
+- No Veil release/branch for 26.x exists (checked FoundryMC/Veil branches), so the Veil + imguimc dependencies were removed from
+  `common/build.gradle`, `fabric/build.gradle` and `fabric.mod.json`. The files that still import `foundry.veil.*` (about 20, all in
+  `sublevel/render/**`, `render/**`, `mixin/sublevel_render/**`, `mixin/entity/entity_rendering`, `SubLevelContainerInspector`) will now
+  fail to compile until they are rewritten against vanilla 26.x rendering (`RenderPipelines`, `SectionCompiler`, `SubmitNodeCollector`).
+- Fabric API 0.165 replacements verified with javap: `LevelRenderEvents.{START_MAIN, AFTER_OPAQUE_TERRAIN, BEFORE_TRANSLUCENT_TERRAIN,
+  AFTER_TRANSLUCENT_TERRAIN, COLLECT_SUBMITS, BEFORE_GIZMOS, END_MAIN}` (`net.fabricmc.fabric.api.client.rendering.v1.level`),
+  context gives `levelState().cameraRenderState` (projectionMatrix, pos), `poseStack()`, `submitNodeCollector()`.
+- Done: `SableClientGizmoHandler` (now uses `Gizmos` + `BEFORE_GIZMOS`), `SableClient` (Veil init removed), `AbstractSableMixinPlugin`
+  and `SableClientConfig` (FabricLoader; shader reload -> resource reload), `GameRendererAccessor` removed (field gone),
+  `ServerPlayerMixin` ported to `ServerPlayer.RespawnConfig` + `ValueInput/ValueOutput` (class tweaker entries restored).
+- Dev environment: JDK 25 `javap` works on the jar (`apt install openjdk-25-jdk-headless`).
+- Still disabled (Veil-only shader preprocessors, dead until render rewrite): dynamic shading, sky light shadows, water occlusion, fancy renderer.

@@ -99,9 +99,11 @@ mutable field net/minecraft/client/renderer/chunk/SectionRenderDispatcher buffer
 accessible method net/minecraft/world/level/Level getEntities ()Lnet/minecraft/world/level/entity/LevelEntityGetter;
 
 # Respawning
-# TODO(26.3): target changed/removed, see PORTING.md: accessible class net/minecraft/server/level/ServerPlayer$RespawnPosAngle
-# TODO(26.3): target changed/removed, see PORTING.md: accessible method net/minecraft/server/level/ServerPlayer$RespawnPosAngle <init> (Lnet/minecraft/world/phys/Vec3;F)V
-# TODO(26.3): target changed/removed, see PORTING.md: accessible method net/minecraft/server/level/ServerPlayer findRespawnAndUseSpawnBlock (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;FZZ)Ljava/util/Optional;
+accessible class net/minecraft/server/level/ServerPlayer$RespawnPosAngle
+accessible method net/minecraft/server/level/ServerPlayer$RespawnPosAngle <init> (Lnet/minecraft/world/phys/Vec3;FF)V
+accessible method net/minecraft/server/level/ServerPlayer findRespawnAndUseSpawnBlock (Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer$RespawnConfig;Z)Ljava/util/Optional;
+accessible field net/minecraft/server/level/ServerPlayer respawnConfig Lnet/minecraft/server/level/ServerPlayer$RespawnConfig;
+mutable field net/minecraft/server/level/ServerPlayer respawnConfig Lnet/minecraft/server/level/ServerPlayer$RespawnConfig;
 
 # Entity Riding
 accessible method net/minecraft/world/entity/LivingEntity dismountVehicle (Lnet/minecraft/world/entity/Entity;)V

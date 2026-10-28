@@ -3,7 +3,7 @@ package dev.ryanhcode.sable.mixin;
 import com.mojang.logging.LogUtils;
 import dev.ryanhcode.sable.annotation.MixinModVersionConstraint;
 import dev.ryanhcode.sable.platform.SableLoaderPlatform;
-import foundry.veil.Veil;
+import net.fabricmc.loader.api.FabricLoader;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -56,7 +56,7 @@ public abstract class AbstractSableMixinPlugin implements IMixinConfigPlugin {
 
             final String modId = parts[3].equals("mixin") ? parts[5] : parts[6];
             
-            final boolean isModLoaded = this.modLoadedCache.computeIfAbsent(modId, x -> Veil.platform().isModLoaded(modId));
+            final boolean isModLoaded = this.modLoadedCache.computeIfAbsent(modId, x -> FabricLoader.getInstance().isModLoaded(modId));
             return isModLoaded && MixinConstraints.handleClassAnnotation(mixinClassName, modId);
         }
 
